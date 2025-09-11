@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="Style/style.css">
+    <script src="Scripts/scriptlogin.js" defer> </script>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <form id="loginForm">
+            <h1> Login </h1>
+            <div class="input-box">
+                <input type="text" placeholder="E-mail" id="email" required>
+                <i class='bx bxs-user'></i>
+            </div>
+
+            <div class="input-box">
+                <input type="password" placeholder="Senha" id="password" required>
+                <i class='bx bxs-lock-alt'></i>
+            </div>
+
+            <div class="remember-forgot">
+                <label>
+                    <input type="checkbox">Lembre-se
+                </label>
+                <a href="Pages/redefinir_senha.html"> Esqueceu a senha?</a>
+            </div>
+
+            <div>
+                <!-- Botão de envio do formulário -->
+                <button type="submit" class="btn-login">Login</button>
+            </div>
+
+            <div class="register-link">
+                <p> Não tem uma conta? <a href="Pages/cadastro.html"> Registre-se </a> </p>
+            </div>
+        </form>
+    </div>
+    
+</body>
+
+</html>

@@ -1,0 +1,225 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url("../Source/img_login.jpg") no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.wrapper {
+    width: 420px;
+    background: transparent;
+    border: 2px solid rgba(217, 179, 179, 0.2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    color: #fff;
+    border-radius: 10px;
+    padding: 30px 40px;
+}
+
+.wrapper h1 {
+    font-size: 36px;
+    text-align: center;
+}
+
+.wrapper .input-box {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin: 30px 0;
+}
+
+.input-box input {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    border: 2px solid rgba(255, 255, 255, .2);
+    border-radius: 40px;
+    font-size: 16px;
+    color: #fff;
+    padding: 20px 45px 20px 20px;
+}
+
+.input-box input::placeholder {
+    color: #fff;
+}
+
+.input-box i {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+}
+
+.wrapper .remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14.5px;
+    margin: -15px 0 15px;
+}
+
+.remember-forgot label input {
+    accent-color: #fff;
+    margin-right: 3px;
+}
+
+.remember-forgot a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.remember-forgot a:hover {
+    text-decoration: underline;
+}
+
+.wrapper .btn {
+    width: 100%;
+    height: 45px;
+    background: #fff;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.wrapper .register-link {
+    font-size: 14.5px;
+    text-align: center;
+    margin: 20px 0 15px;
+}
+
+.register-link p a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-link p a:hover {
+    text-decoration: underline;
+}
+
+.wrapper .come-back {
+    margin-top: 20px;
+}
+
+.wrapper .come-back a {
+    color: #fff;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+.wrapper .btn a {
+    text-decoration: none;
+    color: black;
+}
+
+.btn-login {
+    display: inline-block;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #000000;
+    background-color: #FFF;
+    border-radius: 40px;
+    font-size: 16px;
+    font-weight: bold;
+    width: 100%;
+    box-sizing: border-box;
+}
+    
+.options button { 
+    margin: 5px; 
+    padding: 8px 12px; 
+    border: none; 
+    background: #007bff; 
+    color: white; 
+    border-radius: 6px; 
+    cursor: pointer; 
+}
+    
+.user { 
+    background: #cfe9ff; 
+    padding: 8px; 
+    border-radius: 8px; 
+    margin: 5px 0; 
+    text-align: right; 
+}
+
+.bot { 
+    background: #eee; 
+    padding: 8px; 
+    border-radius: 8px; 
+    margin: 5px 0; 
+}
+
+.messages { 
+    height: 300px; 
+    overflow-y: auto; 
+    margin-bottom: 10px; 
+}
+
+.chatbox { 
+    width: 400px; 
+    margin: 40px auto; 
+    background: white; 
+    border-radius: 10px; 
+    padding: 15px; 
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+#NewAgend {
+   background-image: none;
+   background-color: #121212;
+}
+
+.botoes {
+  display: flex;               /* coloca lado a lado */
+  justify-content:space-between; /* espaço entre eles */
+  margin-top: 5px;
+}
+
+.chatBoxVoltar { 
+    display: inline-block; 
+    font-size: 22px; 
+    font-family: 'Times New Roman', Times, serif; 
+    background-color: red ; 
+    color: white; 
+    border-radius: 6px; 
+    padding: 10px 16px; 
+    text-decoration: none; /* remove o sublinhado */ 
+    align-items: center; 
+    text-align: center;
+}
+
+.chatBox { 
+    display: inline-block; 
+    font-size: 22px; 
+    font-family: 'Times New Roman', Times, serif; 
+    background-color: green ; 
+    color: white; 
+    border-radius: 6px; 
+    padding: 10px 16px; 
+    text-decoration: none; /* remove o sublinhado */ 
+    align-items: center; 
+    text-align: center;
+}
+
+
+

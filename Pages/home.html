@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LoungeLumière - Chatbot</title>
+  <link rel="stylesheet" href="stylehome.css" />
+</head>
+<body>
+  <header class="header">
+    <h1 class="logo">Consultas Médicas</h1>
+    <div class="search-bar">
+      <input type="text" placeholder="Buscar médicos, horários e locais..." />
+      <button class="buttonsearch" aria-label="Buscar">
+        <img id="lupa"
+          src="https://thumbs.dreamstime.com/z/%C3%ADcone-da-lupa-lente-de-aumento-do-vetor-ou-sinal-128227165.jpg?w=768"
+          alt="Lupa" />
+      </button>
+    </div>
+
+    <nav class="menucontainer" aria-label="Menu principal">
+      <div class="menus" tabindex="0">
+        <img src="../Source/perfil.png" alt="Perfil" class="fixed-size" />
+        <p>Perfil</p>
+      </div>
+      <div class="menus" tabindex="0">
+        <img src="../Source/ajuda.png" alt="Ajuda" class="fixed-size" />
+        <p>Ajuda</p>
+      </div>
+      <div class="menus sair-menu" tabindex="0">
+        <img src="../Source/sair.png" alt="Sair" class="fixed-size" />
+        <a href="../index.html">Sair</a>
+      </div>
+    </nav>
+  </header>
+
+  <div>
+    <a id="btn-chat" href="chat.html">Novo Agendamento</a>
+  </div>
+
+  <!-- Botão para abrir chatbot -->
+  <button id="chatbotToggler" aria-label="Abrir chatbot" class="chatbot-toggler">💬</button>
+
+  <!-- Janela do chatbot -->
+  <div id="chatbotWindow" class="chatbot-window" aria-hidden="true">
+    <div class="chatbot-header">
+      <span>Agendamento de Consultas</span>
+      <button id="chatbotCloseBtn" aria-label="Fechar chatbot" class="chatbot-close-btn">✖️</button>
+    </div>
+
+    <div id="chatbotMessages" class="chatbot-messages" tabindex="0"></div>
+
+    <div class="chatbot-input-area">
+      <input id="chatbotInput" type="text" placeholder="Digite sua mensagem..." aria-label="Mensagem para chatbot" autocomplete="off" />
+      <button id="chatbotSendBtn" aria-label="Enviar mensagem">Enviar</button>
+    </div>
+  </div>
+
+
+ <script src="../Scripts/scriptfetch.js"></script>
+
+</body>
+</html>
