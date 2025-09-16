@@ -1,79 +1,85 @@
-console.log('script.js carregado');
 
-document.addEventListener('DOMContentLoaded', () => {
-  const apiKey = '1ab83bf0';
-  const chatbotToggler = document.getElementById('chatbotToggler');
-  const chatbotWindow = document.getElementById('chatbotWindow');
-  const chatbotCloseBtn = document.getElementById('chatbotCloseBtn');
-  const chatbotMessages = document.getElementById('chatbotMessages');
-  const chatbotInput = document.getElementById('chatbotInput');
-  const chatbotSendBtn = document.getElementById('chatbotSendBtn');
-  const buttonsearch = document.querySelector('.buttonsearch');
-  const searchInput = document.querySelector('.search-bar input');
+// Bot para agendamento de consultas, usando o mesmo layout do bot antigo
 
-  // O restante do seu código, por exemplo:
-  chatbotToggler.addEventListener('click', () => {
-    chatbotWindow.classList.toggle('active');
-    chatbotWindow.setAttribute('aria-hidden', !chatbotWindow.classList.contains('active'));
-    chatbotInput.focus();
-  });
+(function () {
+  const mensagensEl = document.getElementById("mensagens");
+  const inputEl = document.getElementById("mensagemInput");
+  const enviarBtn = document.getElementById("enviarBtn");
 
-  chatbotCloseBtn.addEventListener('click', () => {
-    chatbotWindow.classList.remove('active');
-    chatbotWindow.setAttribute('aria-hidden', 'true');
-    chatbotToggler.focus();
-  });
+  let etapa = 0;
+  let dados = { paciente: "", medico: "", data: "", horario: "" };
 
-  chatbotSendBtn.addEventListener('click', enviarMensagem);
-  chatbotInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') enviarMensagem();
-  });
-
-  buttonsearch.addEventListener('click', () => {
-    const termo = searchInput.value.trim();
-    if (!termo) return alert('Por favor, digite um termo para buscar.');
-    alert(`Busca por "${termo}" não está implementada ainda.`);
-  });
-
-  function enviarMensagem() {
-    const texto = chatbotInput.value.trim();
-    if (!texto) return;
-    adicionarMensagem(texto, 'usuario');
-    chatbotInput.value = '';
-    responder(texto);
+  // Recebe os dados do paciente
+  function addMensagem(texto, quem = "bot") {
+    if (!mensagensEl) return;
+    const div = document.createElement("div");
+    div.className = quem === "bot" ? "mensagem-bot" : "mensagem-user";
+    div.innerText = texto;
+    mensagensEl.appendChild(div);
+    mensagensEl.scrollTop = mensagensEl.scrollHeight;
   }
 
-  function adicionarMensagem(texto, remetente) {
-    const msgDiv = document.createElement('div');
-    msgDiv.classList.add('msg', remetente);
-    msgDiv.textContent = texto;
-    chatbotMessages.appendChild(msgDiv);
-    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-  }
-
-  async function responder(texto) {
-    adicionarMensagem('Buscando informações sobre "' + texto + '"...', 'bot');
+  //Aqui ele ira realizar uma consulta ao banco de dados, dando uma mensagem de erro caso não consigo realizar o agendamento, falta realizar a tabela e a rota
+  async function enviarAgendamento() {
+    addMensagem("⏳ Agendando sua consulta...", "bot");
     try {
-      const response = await fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(texto)}&apikey=${apiKey}&plot=full&lang=pt`);
-      const data = await response.json();
-      chatbotMessages.lastChild.textContent = ''; // limpa mensagem temporária
-
-      if (data.Response === 'True') {
-        adicionarMensagem(`${data.Title} (${data.Year}) - Nota: ${data.imdbRating}`, 'bot');
-        if (data.Poster && data.Poster !== 'N/A') {
-          const img = document.createElement('img');
-          img.src = data.Poster;
-          img.alt = `Poster do filme ${data.Title}`;
-          chatbotMessages.appendChild(img);
-          chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-        }
-        adicionarMensagem(data.Plot, 'bot');
+      const res = await fetch("/api/agendar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dados)
+      });
+      const json = await res.json();
+      if (res.ok && json.sucesso) {
+        addMensagem(`✅ Consulta com ${json.consulta.medico} agendada para ${json.consulta.data} às ${json.consulta.horario}.`, "bot");
       } else {
-        adicionarMensagem('Não encontrei resultados para "' + texto + '".', 'bot');
+        addMensagem(`❌ Erro: ${json.erro || "Não foi possível agendar."}`, "bot");
       }
-    } catch (error) {
-      chatbotMessages.lastChild.textContent = 'Erro na busca. Tente novamente.';
+    } catch (err) {
+      console.error(err);
+      addMensagem("❌ Erro de rede ao tentar agendar.", "bot");
     }
   }
 
-});
+  //Realiza o agendamento
+  function processaMensagemUsuario(texto) {
+    if (etapa === 0) {
+      dados.paciente = texto;
+      etapa = 1;
+      addMensagem(`Olá, ${dados.paciente}! Qual médico ou especialidade você deseja?`, "bot");
+    } else if (etapa === 1) {
+      dados.medico = texto;
+      etapa = 2;
+      addMensagem(`Perfeito. Para qual data? (Formato: YYYY-MM-DD)`, "bot");
+    } else if (etapa === 2) {
+      dados.data = texto;
+      etapa = 3;
+      addMensagem(`Certo. Qual horário? (Ex: 14:30)`, "bot");
+    } else if (etapa === 3) {
+      dados.horario = texto;
+      etapa = 0;
+      addMensagem(`Confirmando: ${dados.medico} em ${dados.data} às ${dados.horario}.`, "bot");
+      enviarAgendamento();
+    }
+  }
+
+  //Gera o evento quando o usuario clica ou pressiona
+  if (enviarBtn && inputEl) {
+    enviarBtn.addEventListener("click", () => {
+      const texto = inputEl.value.trim();
+      if (!texto) return;
+      addMensagem(texto, "user");
+      processaMensagemUsuario(texto);
+      inputEl.value = "";
+    });
+
+    inputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        enviarBtn.click();
+        e.preventDefault();
+      }
+    });
+  }
+
+  // Mensagem inicial do bot
+  addMensagem("Olá! Eu sou o bot de agendamento. Qual o seu nome completo?", "bot");
+})();
