@@ -51,27 +51,51 @@
     }
   }
 
-  // Processa as mensagens do usuário
-  function processaMensagemUsuario(texto) {
-    if (etapa === 0) {
-      dados.paciente = texto;
-      etapa = 1;
-      addMensagem(`Olá, ${dados.paciente}! Qual médico ou especialidade você deseja?`, "bot");
-    } else if (etapa === 1) {
-      dados.medico = texto;
+  // Lista de médicos disponíveis
+const medicosDisponiveis = ["Dr. João - Cardiologista", "Dra. Maria - Pediatra", "Dr. Pedro - Ortopedista"];
+
+// Função para exibir opções de médicos clicáveis
+function mostrarOpcoesMedicos() {
+  if (!mensagensEl) return;
+  const container = document.createElement("div");
+  container.className = "opcoes-medicos";
+
+  medicosDisponiveis.forEach((medico) => {
+    const btn = document.createElement("button");
+    btn.className = "botao-medico";
+    btn.innerText = medico;
+    btn.addEventListener("click", () => {
+      dados.medico = medico;
       etapa = 2;
-      addMensagem(`Perfeito. Para qual data? (Formato: YYYY-MM-DD)`, "bot");
-    } else if (etapa === 2) {
-      dados.data = texto;
-      etapa = 3;
-      addMensagem(`Certo. Qual horário? (Ex: 14:30)`, "bot");
-    } else if (etapa === 3) {
-      dados.horario = texto;
-      etapa = 0;
-      addMensagem(`Confirmando: ${dados.medico} em ${dados.data} às ${dados.horario}.`, "bot");
-      enviarAgendamento();
-    }
+      addMensagem(`Você escolheu: ${medico}`, "user");
+      addMensagem(`Perfeito. Para qual data? (Formato: DD/MM/YYYY)`, "bot");
+    });
+    container.appendChild(btn);
+  });
+
+  mensagensEl.appendChild(container);
+  mensagensEl.scrollTop = mensagensEl.scrollHeight; // scroll automático
+}
+
+// Ajustar a etapa do médico
+function processaMensagemUsuario(texto) {
+  if (etapa === 0) {
+    dados.paciente = texto;
+    etapa = 1;
+    addMensagem(`Olá, ${dados.paciente}! Qual médico ou especialidade você deseja?`, "bot");
+    mostrarOpcoesMedicos(); // mostra opções clicáveis
+  } else if (etapa === 2) {
+    dados.data = texto;
+    etapa = 3;
+    addMensagem(`Certo. Qual horário? (Ex: 14:30)`, "bot");
+  } else if (etapa === 3) {
+    dados.horario = texto;
+    etapa = 0;
+    addMensagem(`Confirmando: ${dados.medico} em ${dados.data} às ${dados.horario}.`, "bot");
+    enviarAgendamento();
   }
+}
+
 
   // Eventos do input
   if (enviarBtn && inputEl) {

@@ -315,3 +315,31 @@ body {
   text-decoration: none; /* remove o sublinhado */
   text-align: center;
 }
+
+.opcoes-medicos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.botao-medico {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.botao-medico:hover {
+  background-color: #0056b3;
+}
+
+.chatbotMessages #messages{
+  max-height: 300px;   /* altura máxima da área de mensagens */
+  overflow-y: auto;    /* ativa a rolagem vertical */
+  padding: 10px;
+  box-sizing: border-box;
+}
