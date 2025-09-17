@@ -1,25 +1,30 @@
 
-// Bot para agendamento de consultas, usando o mesmo layout do bot antigo
-
+// Bot para agendamento de consultas
 (function () {
-  const mensagensEl = document.getElementById("mensagens");
-  const inputEl = document.getElementById("mensagemInput");
-  const enviarBtn = document.getElementById("enviarBtn");
+  const chatbotWindow = document.getElementById("chatbotWindow");
+  const toggler = document.getElementById("chatbotToggler");
+  const closeBtn = document.getElementById("chatbotCloseBtn");
+
+  const mensagensEl = document.getElementById("chatbotMessages");
+  const inputEl = document.getElementById("chatbotInput");
+  const enviarBtn = document.getElementById("chatbotSendBtn");
 
   let etapa = 0;
   let dados = { paciente: "", medico: "", data: "", horario: "" };
 
-  // Recebe os dados do paciente
+  // Adiciona mensagens no chat
   function addMensagem(texto, quem = "bot") {
     if (!mensagensEl) return;
     const div = document.createElement("div");
     div.className = quem === "bot" ? "mensagem-bot" : "mensagem-user";
     div.innerText = texto;
     mensagensEl.appendChild(div);
+
+    // Scroll automático sempre para a última mensagem
     mensagensEl.scrollTop = mensagensEl.scrollHeight;
   }
 
-  //Aqui ele ira realizar uma consulta ao banco de dados, dando uma mensagem de erro caso não consigo realizar o agendamento, falta realizar a tabela e a rota
+  // Envia dados simulando agendamento
   async function enviarAgendamento() {
     addMensagem("⏳ Agendando sua consulta...", "bot");
     try {
@@ -30,9 +35,15 @@
       });
       const json = await res.json();
       if (res.ok && json.sucesso) {
-        addMensagem(`✅ Consulta com ${json.consulta.medico} agendada para ${json.consulta.data} às ${json.consulta.horario}.`, "bot");
+        addMensagem(
+          `✅ Consulta com ${json.consulta.medico} agendada para ${json.consulta.data} às ${json.consulta.horario}.`,
+          "bot"
+        );
       } else {
-        addMensagem(`❌ Erro: ${json.erro || "Não foi possível agendar."}`, "bot");
+        addMensagem(
+          `❌ Erro: ${json.erro || "Não foi possível agendar."}`,
+          "bot"
+        );
       }
     } catch (err) {
       console.error(err);
@@ -40,7 +51,7 @@
     }
   }
 
-  //Realiza o agendamento
+  // Processa as mensagens do usuário
   function processaMensagemUsuario(texto) {
     if (etapa === 0) {
       dados.paciente = texto;
@@ -62,7 +73,7 @@
     }
   }
 
-  //Gera o evento quando o usuario clica ou pressiona
+  // Eventos do input
   if (enviarBtn && inputEl) {
     enviarBtn.addEventListener("click", () => {
       const texto = inputEl.value.trim();
@@ -80,6 +91,27 @@
     });
   }
 
-  // Mensagem inicial do bot
-  addMensagem("Olá! Eu sou o bot de agendamento. Qual o seu nome completo?", "bot");
+  // Função para resetar conversa
+  function resetarConversa() {
+    mensagensEl.innerHTML = ""; // limpa mensagens
+    etapa = 0;
+    dados = { paciente: "", medico: "", data: "", horario: "" };
+    addMensagem("Olá! Eu sou o bot de agendamento. Qual o seu nome completo?", "bot");
+  }
+
+  // Controle de abrir/fechar chatbot
+  toggler.addEventListener("click", () => {
+    chatbotWindow.style.display = "block";
+    chatbotWindow.setAttribute("aria-hidden", "false");
+    resetarConversa();
+  });
+
+  closeBtn.addEventListener("click", () => {
+    chatbotWindow.style.display = "none";
+    chatbotWindow.setAttribute("aria-hidden", "true");
+    resetarConversa(); // reseta ao fechar
+  });
+
+  // Mensagem inicial quando a página é carregada
+  resetarConversa();
 })();
