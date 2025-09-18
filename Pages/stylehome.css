@@ -95,6 +95,7 @@ body {
   color: #eee;
   font-size: 0.85rem;
   transition: color 0.2s ease;
+
 }
 
 .menus:hover,
@@ -109,16 +110,15 @@ body {
   margin-bottom: 6px;
 }
 
-/* Botão Sair mais bonito */
+
 .sair-menu {
+  text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 8px;
-  background-color: #000000; /* vermelho elegante */
-  padding: 6px 12px;
+  padding: 6px 10px;
   border-radius: 6px;
   transition: background 0.3s;
-}
+} 
 
 .sair-menu a {
   color: #fff; /* texto branco */
@@ -168,7 +168,7 @@ body {
   color: #f1f1f1;
   border-radius: 16px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-  overflow: hidden;
+  overflow: scroll;
   flex-direction: column;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   z-index: 10000;

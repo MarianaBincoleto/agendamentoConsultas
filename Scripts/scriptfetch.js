@@ -1,4 +1,3 @@
-
 // Bot para agendamento de consultas
 (function () {
   const chatbotWindow = document.getElementById("chatbotWindow");
@@ -12,6 +11,15 @@
   let etapa = 0;
   let dados = { paciente: "", medico: "", data: "", horario: "" };
 
+  // Lista de médicos disponíveis
+  const medicosDisponiveis = [
+    "Dr. João - Cardiologista",
+    "Dra. Maria - Pediatra",
+    "Dr. Pedro - Ortopedista",
+    "Dr. Carla - Geriatra"
+  ];
+
+
   // Adiciona mensagens no chat
   function addMensagem(texto, quem = "bot") {
     if (!mensagensEl) return;
@@ -24,6 +32,54 @@
     mensagensEl.scrollTop = mensagensEl.scrollHeight;
   }
 
+  // Exibe opções de médicos clicáveis
+  function mostrarOpcoesMedicos() {
+    if (!mensagensEl) return;
+    const container = document.createElement("div");
+    container.className = "opcoes-medicos";
+
+    medicosDisponiveis.forEach((medico) => {
+      const btn = document.createElement("button");
+      btn.className = "botao-medico";
+      btn.innerText = medico;
+      btn.addEventListener("click", () => {
+        dados.medico = medico;
+        etapa = 2;
+        addMensagem(`Você escolheu: ${medico}`, "user");
+        addMensagem(`Perfeito. Para qual data? (Formato: DD/MM/YYYY)`, "bot");
+      });
+      container.appendChild(btn);
+    });
+
+    mensagensEl.appendChild(container);
+    mensagensEl.scrollTop = mensagensEl.scrollHeight;
+  }
+
+  // Processa a mensagem do usuário de acordo com a etapa
+  function processaMensagemUsuario(texto) {
+    if (etapa === 0) {
+      dados.paciente = texto;
+      etapa = 1;
+      addMensagem(
+        `Olá, ${dados.paciente}! Qual médico ou especialidade você deseja?`,
+        "bot"
+      );
+      mostrarOpcoesMedicos();
+    } else if (etapa === 2) {
+      dados.data = texto;
+      etapa = 3;
+      addMensagem(`Certo. Qual horário desejado? (Ex: 14:30)`, "bot");
+    } else if (etapa === 3) {
+      dados.horario = texto;
+      etapa = 0;
+      addMensagem(
+        `Confirmando: ${dados.medico} em ${dados.data} às ${dados.horario}.`,
+        "bot"
+      );
+      enviarAgendamento();
+    }
+  }
+
   // Envia dados simulando agendamento
   async function enviarAgendamento() {
     addMensagem("⏳ Agendando sua consulta...", "bot");
@@ -33,6 +89,7 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dados)
       });
+
       const json = await res.json();
       if (res.ok && json.sucesso) {
         addMensagem(
@@ -51,53 +108,19 @@
     }
   }
 
-  // Lista de médicos disponíveis
-const medicosDisponiveis = ["Dr. João - Cardiologista", "Dra. Maria - Pediatra", "Dr. Pedro - Ortopedista"];
-
-// Função para exibir opções de médicos clicáveis
-function mostrarOpcoesMedicos() {
-  if (!mensagensEl) return;
-  const container = document.createElement("div");
-  container.className = "opcoes-medicos";
-
-  medicosDisponiveis.forEach((medico) => {
-    const btn = document.createElement("button");
-    btn.className = "botao-medico";
-    btn.innerText = medico;
-    btn.addEventListener("click", () => {
-      dados.medico = medico;
-      etapa = 2;
-      addMensagem(`Você escolheu: ${medico}`, "user");
-      addMensagem(`Perfeito. Para qual data? (Formato: DD/MM/YYYY)`, "bot");
-    });
-    container.appendChild(btn);
-  });
-
-  mensagensEl.appendChild(container);
-  mensagensEl.scrollTop = mensagensEl.scrollHeight; // scroll automático
-}
-
-// Ajustar a etapa do médico
-function processaMensagemUsuario(texto) {
-  if (etapa === 0) {
-    dados.paciente = texto;
-    etapa = 1;
-    addMensagem(`Olá, ${dados.paciente}! Qual médico ou especialidade você deseja?`, "bot");
-    mostrarOpcoesMedicos(); // mostra opções clicáveis
-  } else if (etapa === 2) {
-    dados.data = texto;
-    etapa = 3;
-    addMensagem(`Certo. Qual horário? (Ex: 14:30)`, "bot");
-  } else if (etapa === 3) {
-    dados.horario = texto;
+  // Reseta a conversa
+  function resetarConversa() {
+    mensagensEl.innerHTML = ""; // limpa mensagens
     etapa = 0;
-    addMensagem(`Confirmando: ${dados.medico} em ${dados.data} às ${dados.horario}.`, "bot");
-    enviarAgendamento();
+    dados = { paciente: "", medico: "", data: "", horario: "" };
+    addMensagem(
+      "Olá! Eu sou o bot de agendamento de consultas médicas. Qual o seu nome completo para começarmos por favor?",
+      "bot"
+    );
   }
-}
 
 
-  // Eventos do input
+  // Input e envio de mensagens
   if (enviarBtn && inputEl) {
     enviarBtn.addEventListener("click", () => {
       const texto = inputEl.value.trim();
@@ -115,15 +138,7 @@ function processaMensagemUsuario(texto) {
     });
   }
 
-  // Função para resetar conversa
-  function resetarConversa() {
-    mensagensEl.innerHTML = ""; // limpa mensagens
-    etapa = 0;
-    dados = { paciente: "", medico: "", data: "", horario: "" };
-    addMensagem("Olá! Eu sou o bot de agendamento. Qual o seu nome completo?", "bot");
-  }
-
-  // Controle de abrir/fechar chatbot
+  // Controle abrir/fechar chatbot
   toggler.addEventListener("click", () => {
     chatbotWindow.style.display = "block";
     chatbotWindow.setAttribute("aria-hidden", "false");
@@ -133,9 +148,9 @@ function processaMensagemUsuario(texto) {
   closeBtn.addEventListener("click", () => {
     chatbotWindow.style.display = "none";
     chatbotWindow.setAttribute("aria-hidden", "true");
-    resetarConversa(); // reseta ao fechar
+    resetarConversa();
   });
 
-  // Mensagem inicial quando a página é carregada
+ 
   resetarConversa();
 })();
