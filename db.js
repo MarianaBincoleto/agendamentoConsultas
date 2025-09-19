@@ -5,7 +5,7 @@ const config = {
   user: 'consulta', // seu usuário do Azure SQL
   password: 'Abc12345678', // sua senha do Azure SQL
   server: 'consultas-dados.database.windows.net', // endereço do servidor
-  database: 'consulta', // nome do banco de dados
+  database: 'dadosconsulta', // nome do banco de dados
   options: {
     encrypt: true, // Necessário para Azure
     trustServerCertificate: false
