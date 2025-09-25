@@ -104,30 +104,70 @@
     }
   }
 
-  // Envia dados simulando agendamento
-  async function enviarAgendamento() {
-    addMensagem("⏳ Agendando sua consulta...", "bot");
-    try {
-      const res = await fetch("/api/agendar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dados)
-      });
+ // Envia dados simulando agendamento
+async function enviarAgendamento() {
+  addMensagem("⏳ Agendando sua consulta...", "bot");
 
-      const json = await res.json();
-      if (res.ok && json.sucesso) {
-        addMensagem(
-          `✅ Consulta com ${json.consulta.medico} agendada para ${json.consulta.data} às ${json.consulta.horario} na unidade ${json.consulta.unidade}.`,
-          "bot"
-        );
-      } else {
-        addMensagem(`❌ Erro: ${json.erro || "Não foi possível agendar."}`, "bot");
-      }
-    } catch (err) {
-      console.error(err);
-      addMensagem("❌ Erro de rede ao tentar agendar.", "bot");
-    }
+  let res, json; //  declaramos aqui para usar fora do try
+  try {
+    res = await fetch("/api/agendar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dados)
+    });
+
+    json = await res.json();
+  } catch (err) {
+    console.error(err);
+    addMensagem("❌ Erro de rede ao tentar agendar.", "bot");
+    return; // encerra se falhar na rede
   }
+
+  // Usa res e json apenas aqui, já com valor
+  if (res.ok && json.sucesso) {
+    addMensagem(
+      `✅ Consulta com ${json.consulta.medico} agendada para ${json.consulta.data} às ${json.consulta.horario} na unidade ${json.consulta.unidade}.`,
+      "bot"
+    );
+
+    //Cria o card na tela de home
+    adicionarCardNaHome({
+      unidade: json.consulta.unidade,
+      medico: json.consulta.medico,
+      data: json.consulta.data,
+      horario: json.consulta.horario
+    });
+  } else {
+    addMensagem(`❌ Erro: ${json?.erro || "Não foi possível agendar."}`, "bot");
+  }
+}
+
+
+  //  ****Envia dados simulando agendamento
+  // async function enviarAgendamento() {
+  //   addMensagem("⏳ Agendando sua consulta...", "bot");
+  //   try {
+  //     const res = await fetch("/api/agendar", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(dados)
+  //     });
+
+  //     const json = await res.json();
+  //     if (res.ok && json.sucesso) {
+  //       addMensagem(
+  //         `✅ Consulta com ${json.consulta.medico} agendada para ${json.consulta.data} às ${json.consulta.horario} na unidade ${json.consulta.unidade}.`,
+  //         "bot"
+  //       );
+  //     } else {
+  //       addMensagem(`❌ Erro: ${json.erro || "Não foi possível agendar."}`, "bot");
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     addMensagem("❌ Erro de rede ao tentar agendar.", "bot");
+  //   }
+  // } ******
+
 
   // Reseta a conversa
   function resetarConversa() {

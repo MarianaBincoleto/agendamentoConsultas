@@ -346,3 +346,38 @@ body {
   padding: 10px;
   box-sizing: border-box;
 }
+
+/* Container dos cards */
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Estilo do card */
+.card-agendamento {
+  background-color: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 16px 20px;
+  width: 260px;
+  color: #eee;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.card-agendamento:hover {
+  transform: translateY(-4px);
+}
+
+.card-agendamento h3 {
+  margin-top: 0;
+  color: #0078d7;
+  font-size: 1.2rem;
+}
+
+.card-agendamento p {
+  margin: 6px 0;
+  font-size: 0.95rem;
+}
