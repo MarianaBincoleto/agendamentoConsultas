@@ -9,7 +9,7 @@
   const enviarBtn = document.getElementById("chatbotSendBtn");
 
   let etapa = 0;
-  let dados = { paciente: "", medico: "", data: "", horario: "" };
+  let dados = { paciente: "", medico: "", unidade: "", data: "", horario: "" };
 
   // Lista de médicos disponíveis
   const medicosDisponiveis = [
@@ -19,6 +19,13 @@
     "Dr. Carla - Geriatra"
   ];
 
+  // Lista de unidades
+  const unidadesDisponiveis = [
+    "Mary Dota",
+    "Bela Vista",
+    "Centro",
+    "Independência"
+  ];
 
   // Adiciona mensagens no chat
   function addMensagem(texto, quem = "bot") {
@@ -27,14 +34,11 @@
     div.className = quem === "bot" ? "mensagem-bot" : "mensagem-user";
     div.innerText = texto;
     mensagensEl.appendChild(div);
-
-    // Scroll automático sempre para a última mensagem
     mensagensEl.scrollTop = mensagensEl.scrollHeight;
   }
 
   // Exibe opções de médicos clicáveis
   function mostrarOpcoesMedicos() {
-    if (!mensagensEl) return;
     const container = document.createElement("div");
     container.className = "opcoes-medicos";
 
@@ -46,6 +50,29 @@
         dados.medico = medico;
         etapa = 2;
         addMensagem(`Você escolheu: ${medico}`, "user");
+        addMensagem(`Agora escolha a unidade de atendimento:`, "bot");
+        mostrarOpcoesUnidades();
+      });
+      container.appendChild(btn);
+    });
+
+    mensagensEl.appendChild(container);
+    mensagensEl.scrollTop = mensagensEl.scrollHeight;
+  }
+
+  // Exibe opções de unidades clicáveis
+  function mostrarOpcoesUnidades() {
+    const container = document.createElement("div");
+    container.className = "opcoes-unidades";
+
+    unidadesDisponiveis.forEach((unidade) => {
+      const btn = document.createElement("button");
+      btn.className = "botao-unidade";
+      btn.innerText = unidade;
+      btn.addEventListener("click", () => {
+        dados.unidade = unidade;
+        etapa = 3;
+        addMensagem(`Unidade escolhida: ${unidade}`, "user");
         addMensagem(`Perfeito. Para qual data? (Formato: DD/MM/YYYY)`, "bot");
       });
       container.appendChild(btn);
@@ -55,25 +82,22 @@
     mensagensEl.scrollTop = mensagensEl.scrollHeight;
   }
 
-  // Processa a mensagem do usuário de acordo com a etapa
+  // Processa a mensagem do usuário
   function processaMensagemUsuario(texto) {
     if (etapa === 0) {
       dados.paciente = texto;
       etapa = 1;
-      addMensagem(
-        `Olá, ${dados.paciente}! Qual médico ou especialidade você deseja?`,
-        "bot"
-      );
+      addMensagem(`Olá, ${dados.paciente}! Qual médico ou especialidade você deseja?`, "bot");
       mostrarOpcoesMedicos();
-    } else if (etapa === 2) {
-      dados.data = texto;
-      etapa = 3;
-      addMensagem(`Certo. Qual horário desejado? (Ex: 14:30)`, "bot");
     } else if (etapa === 3) {
+      dados.data = texto;
+      etapa = 4;
+      addMensagem(`Certo. Qual horário desejado? (Ex: 14:30)`, "bot");
+    } else if (etapa === 4) {
       dados.horario = texto;
       etapa = 0;
       addMensagem(
-        `Confirmando: ${dados.medico} em ${dados.data} às ${dados.horario}.`,
+        `Confirmando: ${dados.medico}, ${dados.unidade}, em ${dados.data} às ${dados.horario}.`,
         "bot"
       );
       enviarAgendamento();
@@ -93,14 +117,11 @@
       const json = await res.json();
       if (res.ok && json.sucesso) {
         addMensagem(
-          `✅ Consulta com ${json.consulta.medico} agendada para ${json.consulta.data} às ${json.consulta.horario}.`,
+          `✅ Consulta com ${json.consulta.medico} agendada para ${json.consulta.data} às ${json.consulta.horario} na unidade ${json.consulta.unidade}.`,
           "bot"
         );
       } else {
-        addMensagem(
-          `❌ Erro: ${json.erro || "Não foi possível agendar."}`,
-          "bot"
-        );
+        addMensagem(`❌ Erro: ${json.erro || "Não foi possível agendar."}`, "bot");
       }
     } catch (err) {
       console.error(err);
@@ -110,15 +131,14 @@
 
   // Reseta a conversa
   function resetarConversa() {
-    mensagensEl.innerHTML = ""; // limpa mensagens
+    mensagensEl.innerHTML = "";
     etapa = 0;
-    dados = { paciente: "", medico: "", data: "", horario: "" };
+    dados = { paciente: "", medico: "", unidade: "", data: "", horario: "" };
     addMensagem(
       "Olá! Eu sou o bot de agendamento de consultas médicas. Qual o seu nome completo para começarmos por favor?",
       "bot"
     );
   }
-
 
   // Input e envio de mensagens
   if (enviarBtn && inputEl) {
@@ -151,6 +171,6 @@
     resetarConversa();
   });
 
- 
   resetarConversa();
 })();
+

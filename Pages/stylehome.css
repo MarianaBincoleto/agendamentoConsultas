@@ -316,14 +316,16 @@ body {
   text-align: center;
 }
 
-.opcoes-medicos {
+.opcoes-medicos, 
+.opcoes-unidades {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin: 10px 0;
 }
 
-.botao-medico {
+.botao-medico, 
+.botao-unidade {
   background-color: #007bff;
   color: white;
   border: none;
@@ -333,7 +335,8 @@ body {
   transition: background 0.3s;
 }
 
-.botao-medico:hover {
+.botao-medico:hover, 
+.botao-unidade:hover {
   background-color: #0056b3;
 }
 
