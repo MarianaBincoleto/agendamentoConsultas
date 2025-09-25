@@ -27,16 +27,19 @@
         <img src="../Source/ajuda.png" alt="Ajuda" class="fixed-size" />
         <p>Ajuda</p>
       </div>
-      <div class="menus sair-menu" tabindex="0">
+      <a href="../index.html" class="menus sair-menu">
         <img src="../Source/sair.png" alt="Sair" class="fixed-size" />
-        <a href="../index.html">Sair</a>
-      </div>
+        <p>Sair</p>
+      </a>
     </nav>
   </header>
 
-  <div>
-    <a id="btn-chat" href="chat.html">Novo Agendamento</a>
-  </div>
+  <main>
+    <h2>Meus Agendamentos</h2>
+      <div id="cardsContainer" class="cards-container">
+        <!-- Os cards serão inseridos aqui via JavaScript -->
+      </div>
+  </main>
 
   <!-- Botão para abrir chatbot -->
   <button id="chatbotToggler" aria-label="Abrir chatbot" class="chatbot-toggler">💬</button>

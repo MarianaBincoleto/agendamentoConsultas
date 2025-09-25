@@ -189,37 +189,9 @@ body {
    background-color: #121212;
 }
 
-.botoes {
-  display: flex;               /* coloca lado a lado */
-  justify-content:space-between; /* espaço entre eles */
-  margin-top: 5px;
-}
 
-.chatBoxVoltar { 
-    display: inline-block; 
-    font-size: 22px; 
-    font-family: 'Times New Roman', Times, serif; 
-    background-color: red ; 
-    color: white; 
-    border-radius: 6px; 
-    padding: 10px 16px; 
-    text-decoration: none; /* remove o sublinhado */ 
-    align-items: center; 
-    text-align: center;
-}
 
-.chatBox { 
-    display: inline-block; 
-    font-size: 22px; 
-    font-family: 'Times New Roman', Times, serif; 
-    background-color: green ; 
-    color: white; 
-    border-radius: 6px; 
-    padding: 10px 16px; 
-    text-decoration: none; /* remove o sublinhado */ 
-    align-items: center; 
-    text-align: center;
-}
+
 
 
 

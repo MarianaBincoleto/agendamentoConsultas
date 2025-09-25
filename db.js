@@ -1,28 +1,20 @@
-const sql = require("mssql");
+// db.js — inicializa SQLite e aplica migrations simples
+const sqlite3 = require("sqlite3").verbose();
+const fs = require("fs");
+const path = require("path");
 
-const config = {
-  user: "consulta", // seu usuário do Azure SQL
-  password: "Abc12345678", // sua senha do Azure SQL
-  server: "consultas-dados.database.windows.net", // endereço do servidor
-  database: "dadosconsulta", // nome do banco de dados
-  options: {
-    encrypt: true, // Necessário para Azure
-    trustServerCertificate: false,
-  },
-};
+const DB_FILE = path.join(__dirname, "agendamento.db");
+const MIGRATION_FILE = path.join(__dirname, "migrations.sql");
 
-const poolPromise = sql
-  .connect(config)
-  .then((pool) => {
-    console.log("Conectado ao Azure SQL!");
-    return pool;
-  })
-  .catch((err) => {
-    console.error("Erro de conexão:", err);
-    throw err;
+function init() {
+  const db = new sqlite3.Database(DB_FILE);
+
+  const migration = fs.readFileSync(MIGRATION_FILE, "utf8");
+  db.exec(migration, (err) => {
+    if (err) console.error("Erro aplicando migrations:", err);
   });
 
-module.exports = {
-  sql,
-  poolPromise,
-};
+  return db;
+}
+
+module.exports = { init };
