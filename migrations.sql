@@ -1,24 +1,21 @@
--- Cria tabelas iniciais
-CREATE TABLE IF NOT EXISTS specialties (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-name TEXT NOT NULL UNIQUE
+CREATE TABLE specialties (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    name NVARCHAR(100) NOT NULL UNIQUE
 );
 
-
-CREATE TABLE IF NOT EXISTS appointments (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-name TEXT NOT NULL,
-phone TEXT,
-specialty TEXT NOT NULL,
-date TEXT NOT NULL, -- YYYY-MM-DD
-time TEXT NOT NULL, -- HH:MM
-status TEXT NOT NULL DEFAULT 'scheduled',
-created_at TEXT DEFAULT (datetime('now','localtime'))
+CREATE TABLE appointments (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    name NVARCHAR(100) NOT NULL,
+    phone NVARCHAR(20),
+    specialty NVARCHAR(100) NOT NULL,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    status NVARCHAR(50) NOT NULL DEFAULT 'scheduled',
+    created_at DATETIME DEFAULT GETDATE()
 );
-
 
 -- Inserir especialidades de exemplo
-INSERT OR IGNORE INTO specialties (name) VALUES ('Cardiologia');
-INSERT OR IGNORE INTO specialties (name) VALUES ('Dermatologia');
-INSERT OR IGNORE INTO specialties (name) VALUES ('Ginecologia');
-INSERT OR IGNORE INTO specialties (name) VALUES ('Pediatria');
+INSERT INTO specialties (name) VALUES ('Cardiologia');
+INSERT INTO specialties (name) VALUES ('Dermatologia');
+INSERT INTO specialties (name) VALUES ('Ginecologia');
+INSERT INTO specialties (name) VALUES ('Pediatria');
